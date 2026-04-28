@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping-config
+data:
+  SERVICE_NAME: shipping-service
+  PORT: "3005"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: shipping-secret
+type: Opaque
+stringData:
+  db_password: postgres
+  database_url: postgres://postgres:postgres@shipping-db:5432/shipping_db

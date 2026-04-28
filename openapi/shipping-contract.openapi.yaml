@@ -1,0 +1,102 @@
+openapi: 3.0.3
+info:
+  title: ECI Shipping Service API (Team Contract)
+  version: 1.0.0
+  description: Integration contract aligned to implemented shipping-service.
+servers:
+  - url: http://localhost:3005
+paths:
+  /health:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: Healthy
+  /v1/shipments:
+    post:
+      summary: Create shipment (idempotent)
+      parameters:
+        - in: header
+          name: Idempotency-Key
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [order_id, carrier]
+              properties:
+                order_id:
+                  type: string
+                carrier:
+                  type: string
+      responses:
+        '201':
+          description: Shipment created
+        '200':
+          description: Idempotent replay
+        '400':
+          description: Validation error
+    get:
+      summary: List shipments
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: status
+          schema:
+            type: string
+        - in: query
+          name: order_id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated list
+  /v1/shipments/{shipmentId}/status:
+    patch:
+      summary: Update shipment status
+      parameters:
+        - in: path
+          name: shipmentId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [PENDING, SHIPPED, DELIVERED, CANCELLED]
+      responses:
+        '200':
+          description: Updated
+        '404':
+          description: Not found
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        correlationId:
+          type: string

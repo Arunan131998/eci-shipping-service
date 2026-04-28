@@ -1,0 +1,28 @@
+version: '3.9'
+services:
+  shipping-db:
+    image: postgres:16
+    container_name: shipping-db
+    environment:
+      POSTGRES_DB: shipping_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5435:5432"
+    volumes:
+      - shipping_db_data:/var/lib/postgresql/data
+
+  shipping-service:
+    build: .
+    container_name: shipping-service
+    environment:
+      PORT: 3005
+      SERVICE_NAME: shipping-service
+      DATABASE_URL: postgres://postgres:postgres@shipping-db:5432/shipping_db
+    depends_on:
+      - shipping-db
+    ports:
+      - "3005:3005"
+
+volumes:
+  shipping_db_data:
