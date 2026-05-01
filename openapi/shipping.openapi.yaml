@@ -86,6 +86,20 @@ paths:
           description: Updated
         '404':
           description: Not found
+  /v1/shipments/{shipmentId}:
+    get:
+      summary: Get shipment by ID
+      parameters:
+        - in: path
+          name: shipmentId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Shipment found
+        '404':
+          description: Not found
 components:
   schemas:
     Error:

@@ -81,6 +81,7 @@ docker compose -f docker-compose.yml exec shipping-service npm run seed
 ## Important Endpoints
 - `GET /health` — Health check
 - `POST /v1/shipments` — Create shipment (idempotent)
+- `GET /v1/shipments/{shipmentId}` — Get shipment details by id
 - `PATCH /v1/shipments/{shipmentId}/status` — Update shipment status (PENDING→SHIPPED→DELIVERED or CANCELLED)
 - `GET /v1/shipments?page=1&limit=10&order_id=ORD-1001` — List shipments with pagination/filtering
 - `GET /docs` — OpenAPI Swagger UI
@@ -96,8 +97,9 @@ Select environment: `ECI Shipping Local`
 #### Test Runner Order
 1. Health - Shipping
 2. Create Shipment (Idempotent)
-3. Update Shipment Status
-4. List Shipments
+3. Get Shipment by Id
+4. Update Shipment Status
+5. List Shipments
 
 The collection auto-saves `shipmentId` from create response for status update flow.
 

@@ -122,6 +122,23 @@ router.patch('/:shipmentId/status', async (req, res, next) => {
   }
 });
 
+router.get('/:shipmentId', async (req, res, next) => {
+  const { shipmentId } = req.params;
+
+  try {
+    const result = await pool.query('SELECT * FROM shipments WHERE shipment_id = $1', [shipmentId]);
+
+    if (result.rows.length === 0) {
+      return next({ status: 404, code: 'SHIPMENT_NOT_FOUND', message: 'Shipment not found' });
+    }
+
+    const shipment = result.rows[0];
+    return res.json({ ...shipment, shipment_status: shipment.status });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 router.get('/', async (req, res, next) => {
   const { page, limit, offset } = parsePagination(req.query);
   const filters = [];
