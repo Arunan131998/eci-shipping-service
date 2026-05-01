@@ -8,7 +8,7 @@ ECI Shipping microservice managing shipment creation and delivery status lifecyc
 - Shipment status updates (`PENDING`, `SHIPPED`, `DELIVERED`, `CANCELLED`)
 - Standard error format: `code`, `message`, `correlationId`
 - Pagination/filtering on list API
-- Callbacks to Order and Notification services
+- Callbacks to Order and Notification services (emits `SHIPMENT_SHIPPED`, `SHIPMENT_DELIVERED`, `SHIPMENT_CANCELLED`)
 - OpenAPI docs at `/docs`
 - Metrics at `/metrics`
 

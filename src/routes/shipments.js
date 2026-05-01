@@ -105,10 +105,17 @@ router.patch('/:shipmentId/status', async (req, res, next) => {
       });
     }
 
-    // Notify on SHIPPED and DELIVERED
+    // Notify on SHIPPED, DELIVERED and CANCELLED
     const notifBaseUrl = process.env.NOTIFICATION_BASE_URL;
-    if (notifBaseUrl && (status === 'SHIPPED' || status === 'DELIVERED')) {
-      const eventType = status === 'SHIPPED' ? 'SHIPMENT_SHIPPED' : 'SHIPMENT_DELIVERED';
+    if (notifBaseUrl && (status === 'SHIPPED' || status === 'DELIVERED' || status === 'CANCELLED')) {
+      let eventType = null;
+      if (status === 'SHIPPED') {
+        eventType = 'SHIPMENT_SHIPPED';
+      } else if (status === 'DELIVERED') {
+        eventType = 'SHIPMENT_DELIVERED';
+      } else if (status === 'CANCELLED') {
+        eventType = 'SHIPMENT_CANCELLED';
+      }
       safeFetch(`${notifBaseUrl}/v1/notifications/events`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-correlation-id': req.correlationId || shipment.shipment_id },
